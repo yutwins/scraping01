@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^1.4.0",
     "csv-writer": "^1.6.0",
     "puppeteer": "^20.6.0"
   }

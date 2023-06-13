@@ -4,27 +4,20 @@
 //   const browser = await puppeteer.launch();
 //   const page = await browser.newPage();
 
-//   await page.goto('https://protocol.ooo/startups'); // あなたのウェブサイトのURLに置き換えてください。
+//   await page.goto('https://protocol.ooo/startups'); //　遷移先のURLに置き換えが必要
 
-//   // 'ProfileCard_container__3qpEP'クラスの要素を取得
-//   const items = await page.$$('a.ProfileCard_container__3qpEP');
+//   const items = await page.$$('a.ProfileCard_container__3qpEP'); // プロフィールカード要素を取得
 
 //   for (const item of items) {
-//     // divタグのテキストを取得
-//     const divText = await item.$eval('div.ProfileCard_name__3j2Pq', div => div.innerText);
-//     // console.log(`p tag text: ${divText}`);
+//     const divText = await item.$eval('div.ProfileCard_name__3j2Pq', div => div.innerText); // プロフィールカード要素の会社名を取得
+//     console.log(`div tag text: ${divText}`);
 
-//     // aタグのhref属性を取得
-//     const aHref = await item.$eval('a', a => a.getAttribute('href'));
+//     const aHref = await page.evaluate(item => item.href, item); // プロフィールカード要素のリンクを取得
 
-//     // 新しいタブでaタグのリンクを開く
 //     const newPage = await browser.newPage();
-//     await newPage.goto(aHref);
+//     await newPage.goto(aHref); // プロフィールカード要素のリンクを開く
 
-//     // 遷移先の特定の要素を取得
-//     const profileCard = await newPage.$('a.ProfileCard_container__3qpEP');
-//     // 特定の要素からテキストや属性を取得するには、適切なプロパティ（innerText, getAttributeなど）を用いてください。
-//     // ここではinnerTextを例に取っています。
+//     const profileCard = await newPage.$('a.OverviewItem_link__12f8U'); // 遷移先にある会社ホームページURLの要素を取得
 //     const profileCardText = await newPage.evaluate(profileCard => profileCard.href, profileCard);
 //     console.log(`ProfileCard text: ${profileCardText}`);
 
@@ -34,7 +27,9 @@
 //   await browser.close();
 // })();
 
+
 const puppeteer = require('puppeteer');
+const axios = require('axios'); // axiosライブラリを追加
 
 (async () => {
   const browser = await puppeteer.launch();
@@ -57,9 +52,15 @@ const puppeteer = require('puppeteer');
     const profileCardText = await newPage.evaluate(profileCard => profileCard.href, profileCard);
     console.log(`ProfileCard text: ${profileCardText}`);
 
+    // POSTリクエストでデータを送信します
+    const res = await axios.post('https://script.google.com/macros/s/AKfycbwfJl7uv_0RfgWOomPFrpe0PMGExUUkGfmNYEhf96AF0Tv2K2VAjttiQE8ksst_vG4b-Q/exec', {
+      companyName: divText,
+      companyURL: profileCardText
+    });
+    console.log(res.data);
+
     await newPage.close();
   }
 
   await browser.close();
 })();
-
