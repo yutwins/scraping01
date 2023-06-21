@@ -99,6 +99,7 @@ const axios = require('axios'); // axiosライブラリを追加
     // After processing all companies, go to the next page
     const nextButton = await page.$('a.section-pagination-link > div.SdbIcon.section-pagination-link-arrow');
     console.log(nextButton);
+
     if (nextButton) {
       const nextButtonHref = await nextButton.evaluate(a => a.parentElement.href);
       await page.goto(nextButtonHref);
